@@ -5,22 +5,18 @@ import javax.swing.DefaultListModel;
 
 import javax.swing.JOptionPane;
 
-
 public class CrudProductos extends javax.swing.JFrame {
-    
-    
+
     private final ArrayList<Producto> productos = new ArrayList<>();
     private final DefaultListModel<String> modeloLista = new DefaultListModel<>();
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CrudProductos.class.getName());
-
 
     public CrudProductos() {
         initComponents();
         jList1.setModel(modeloLista);
     }
 
-   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -179,18 +175,15 @@ public class CrudProductos extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             String nombre = txtProducto.getText().trim();
-           float precio = Float.parseFloat(txtPrecio.getText().trim());
-           
-           
-          
+            float precio = Float.parseFloat(txtPrecio.getText().trim());
 
-            if (!nombre.isEmpty() && nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")  ) {
+            if (!nombre.isEmpty() && nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
                 Producto p = new Producto(nombre, precio);
                 productos.add(p); // lo guardo en el ArrayList
                 modeloLista.addElement(p.toString()); // lo muestro en la lista
                 txtProducto.setText("");
                 txtPrecio.setText("");
-                
+
             } else {
                 JOptionPane.showMessageDialog(this, "Escribe un producto primero y solo con letras ");
             }
@@ -200,12 +193,12 @@ public class CrudProductos extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-     
-    int index =jList1.getSelectedIndex();
+
+        int index = jList1.getSelectedIndex();
         if (index >= 0) {
             Producto p = productos.get(index);
             JOptionPane.showMessageDialog(this,
-                    "Productos " +  p.getNombre() +  "  Precio: $ " + p.getPrecio());
+                    "Productos " + p.getNombre() + "  Precio: $ " + p.getPrecio());
         } else {
             JOptionPane.showMessageDialog(this, "Selecciona un producto");
         }
@@ -222,17 +215,27 @@ public class CrudProductos extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int index = jList1.getSelectedIndex();
-        
         if (index != -1) {
-            String nuevo = JOptionPane.showInputDialog(this, "Editar producto:", modeloLista.getElementAt(index));
-            if (nuevo != null && !nuevo.trim().isEmpty() && nuevo.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+") ) {
-                modeloLista.set(index, nuevo.trim());
-            } else{
-                JOptionPane.showMessageDialog(this, "El nombre solo debe contener letras");
+            String producto = modeloLista.getElementAt(index);
+            String[] partes = producto.split(" - ");
+            String nombre = partes[0];
+            String precioActual = partes[1];
+
+            String nuevoPrecio = JOptionPane.showInputDialog(this,
+                    "precio actual de " + nombre + "$:" + precioActual);
+
+            if (nuevoPrecio != null && nuevoPrecio.matches("\\d+")) {
+                float convert = Float.parseFloat(nuevoPrecio);
+                // Actualizamos el producto en la lista con el nuevo precio
+                modeloLista.set(index, nombre + " - " + convert);
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor ingresa solo números para el precio.");
             }
+
         } else {
             JOptionPane.showMessageDialog(this, "Selecciona un producto de la lista para editar");
         }
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductoActionPerformed
